@@ -1,6 +1,7 @@
 try:
     from bs4 import BeautifulSoup
     import requests as req
+    import datetime
 except:
     print("Please install beautifulsoup4,requests\n=> pip install beautifulsoup4,requests")
     import sys
@@ -8,11 +9,31 @@ except:
 
 class Get_comments:
     
-    def __init__(self, count):
+    def __init__(self):
         self.query = "이승만,박정희,전두환,노태우,김영삼,김대중,노무현,이명박,박근혜,문재인".split(",")
         self.presidents = []
         self.datas = []
-        self.count = count
+
+        self.dates = []
+
+        year, month, day = 2017, 5, 1
+        maxdate = datetime.date(2019, 5, 15).strftime("%Y%m%d")
+        self.dates.append(datetime.date(year, month, day).strftime("%Y%m%d"))
+                
+        while self.dates[-1] != maxdate:
+
+            if day == 1:
+                day = 15
+                self.dates.append(datetime.date(year, month, day).strftime("%Y%m%d"))
+            else:
+                day = 1
+                month += 1
+                try:
+                    self.dates.append(datetime.date(year, month, day).strftime("%Y%m%d"))
+                except ValueError:
+                    month = 1
+                    year += 1
+                    self.dates.append(datetime.date(year, month, day).strftime("%Y%m%d"))
 
         
     def main(self):
@@ -22,9 +43,13 @@ class Get_comments:
             self.presidents.append(q)
             raw_data = []
             tmp = 0
-            for i in range(self.count):
-                start = "&start=%d" %(i * 10 + 1)
-                url = "https://search.naver.com/search.naver?query=" + q + "&where=news&ie=utf8" + start
+            
+            i = 0
+            length = len(self.dates)
+
+            for date in self.dates:
+                nso = "&nso=so%3Ar%2Cp%3Afrom" + date + "to" + date + "%2Ca%3Aall"
+                url = "https://search.naver.com/search.naver?query=" + q + "&where=news&ie=utf8" + nso
 
                 try:
                     html = req.get(url)
@@ -32,14 +57,15 @@ class Get_comments:
                 except:
                     print("검색중 에러가 발생했습니다.\n동작을 중지합니다.")
                     return False
-                
-                now = int((i / self.count) * 100)
+                    
+                raw_data += soup.find_all("a", {"class" : " _sp_each_title"})
+
+                now = int((i / length) * 100)
                 if tmp * 10 < now:
                     print("///", end = "")
                     tmp += 1
-                    
-                raw_data += soup.find_all("a", {"class" : " _sp_each_title"})
-                
+                i += 1
+
             self.datas.append([])
             for x in raw_data:
                 self.datas[index].append(x.text)
@@ -48,8 +74,7 @@ class Get_comments:
             index += 1
             
         return True
-
-
+    
     def print_results(self):        
         for i in range(len(self.presidents)):
             print("=" * 25)
@@ -77,8 +102,7 @@ if __name__ == '__main__':
     print("================================================")
     print("\n" + " " * 20 + "개발자 : Cachi")
     print("\n\n검색을 시도합니다.\n")
-    n = int(input("몇 페이지를 검색하시겠습니까? >>> "))
-    TEST = Get_comments(n)
+    TEST = Get_comments()
     
     run = TEST.main()
     if run:
@@ -103,3 +127,4 @@ if __name__ == '__main__':
     else:
         print("\n\n[*] 인터넷 연결이나 url을 확인해 주세요!!!")
     print("================================================")
+

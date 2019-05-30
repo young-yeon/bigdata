@@ -7,8 +7,7 @@ import json
 from datetime import date
 
 def main():
-    n = int(input("검색 정보 크기 입력\n>>> "))
-    get_comments = Get_comments(n)
+    get_comments = Get_comments()
     run = get_comments.main()
 
     if run:

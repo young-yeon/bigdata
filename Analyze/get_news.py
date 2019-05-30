@@ -13,18 +13,28 @@ class Get_comments:
         self.query = "이승만,박정희,전두환,노태우,김영삼,김대중,노무현,이명박,박근혜,문재인".split(",")
         self.presidents = []
         self.datas = []
-
         self.dates = []
+        self.get_dates()
 
+
+    def get_dates(self):
         year, month, day = 2017, 5, 1
         maxdate = datetime.date(2019, 5, 15).strftime("%Y%m%d")
-        self.dates.append(datetime.date(year, month, day).strftime("%Y%m%d"))
-                
-        while self.dates[-1] != maxdate:
 
+        self.dates.append(datetime.date(year, month, day).strftime("%Y%m%d"))
+
+        while self.dates[-1] != maxdate:
             if day == 1:
-                day = 15
+                day = 5
                 self.dates.append(datetime.date(year, month, day).strftime("%Y%m%d"))
+            elif day < 30:
+                day += 5
+                try:
+                    self.dates.append(datetime.date(year, month, day).strftime("%Y%m%d"))
+                except ValueError:
+                    day = 1
+                    month += 1
+                    self.dates.append(datetime.date(year, month, day).strftime("%Y%m%d"))
             else:
                 day = 1
                 month += 1

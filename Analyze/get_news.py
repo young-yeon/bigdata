@@ -10,7 +10,8 @@ except:
 class Get_comments:
     
     def __init__(self):
-        self.query = "이승만,박정희,전두환,노태우,김영삼,김대중,노무현,이명박,박근혜,문재인".split(",")
+        self.query = ['이승만', '박정희', '전두환', '노태우', '김영삼', \
+                        '김대중', '노무현', '이명박', '박근혜', '문재인']
         self.presidents = []
         self.datas = []
         self.dates = []

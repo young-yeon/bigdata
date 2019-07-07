@@ -19,8 +19,12 @@ import json
 class KnuSL():
 
 	def __init__(self):
-		with open('Analyze/data/SentiWord_info.json', encoding='utf-8-sig', mode='r') as f:
-			self.data = json.load(f)
+		try:
+			with open('Analyze/data/SentiWord_info.json', encoding='utf-8-sig', mode='r') as f:
+				self.data = json.load(f)
+		except:
+			with open('data/SentiWord_info.json', encoding='utf-8-sig', mode='r') as f:
+				self.data = json.load(f)
 
 	def data_list(self, wordname):
 		result = ['0','0']	

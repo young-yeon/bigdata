@@ -26,10 +26,10 @@ class Get_comments:
 
         while self.dates[-1] != maxdate:
             if day == 1:
-                day = 5
+                day = 3
                 self.dates.append(datetime.date(year, month, day).strftime("%Y%m%d"))
             elif day < 30:
-                day += 5
+                day += 2
                 try:
                     self.dates.append(datetime.date(year, month, day).strftime("%Y%m%d"))
                 except ValueError:
